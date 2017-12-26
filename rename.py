@@ -10,13 +10,16 @@ def rename_mzitu(url):
     html = urllib.request.urlopen(url)
     title = BeautifulSoup(html.read(),'lxml').find("h2",{"class":"main-title"}).get_text()
     title = title.replace(':','')
+    title = title.replace('?','')
+    title = title.replace('"','')
     html = urllib.request.urlopen(url)
     page = BeautifulSoup(html.read(),'lxml').find("div",{"class":"pagenavi"}).findAll("span")[-2].get_text()
     try:
         os.makedirs("D:\\temp\\pic\\mzitu\\"+title)
     except:
         os.rename("D:\\temp\\pic\\mzitu\\"+title,"D:\\temp\\pic\\mzitu\\"+title+page)
-        return
+    finally:
+        pass
 if __name__ == '__main__':
     for i in range(1,162):
         print("第"+str(i)+"页")
