@@ -9,10 +9,11 @@ import pymysql
 def xiazai_mzitu(url):
     html = urllib.request.urlopen(url)
     title = BeautifulSoup(html.read(),'lxml').find("h2",{"class":"main-title"}).get_text()
+    title = title.replace(':', '.')
     html = urllib.request.urlopen(url)
     page = BeautifulSoup(html.read(),'lxml').find("div",{"class":"pagenavi"}).findAll("span")[-2].get_text()
     try:
-        os.makedirs("D:\\temp\\pic\\mzitu\\"+str(title))
+        os.makedirs("D:\\temp\\pic\\mzitu\\"+title)
     except:
         return 
     after = int(page)+1
@@ -60,13 +61,14 @@ def xiazai_mzitu(url):
 def xiazai_mzitu_sql(url):
     html = urllib.request.urlopen(url)
     title = BeautifulSoup(html,'lxml').find("h2",{"class":"main-title"}).get_text()
+    title = title.replace(':', '.')
     html = urllib.request.urlopen(url)
     page = BeautifulSoup(html,'lxml').find("div",{"class":"pagenavi"}).findAll("span")[-2].get_text()
     try:
-        os.makedirs("D:\\temp\\pic\\mzitu\\"+str(title))
+        os.makedirs("D:\\temp\\pic\\mzitu\\"+title)
     except:         
-        shutil.rmtree("D:\\temp\\pic\\mzitu\\"+str(title))
-        os.makedirs("D:\\temp\\pic\\mzitu\\"+str(title))
+        shutil.rmtree("D:\\temp\\pic\\mzitu\\"+title)
+        os.makedirs("D:\\temp\\pic\\mzitu\\"+title)
     after = int(page)+1
     for i in range(1,after):
         try:
