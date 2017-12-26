@@ -8,6 +8,9 @@ import shutil
 def xiazai_mzitu(url):
     html = urllib.request.urlopen(url)
     title = BeautifulSoup(html,'lxml').find("h2",{"class":"main-title"}).get_text()
+    title = title.replace(':','')
+    title = title.replace('?','')
+    title = title.replace('"','')
     html = urllib.request.urlopen(url)
     page = BeautifulSoup(html,'lxml').find("div",{"class":"pagenavi"}).findAll("span")[-2].get_text()
     try:
