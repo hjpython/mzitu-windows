@@ -18,7 +18,7 @@ def rename_mzitu(url):
         os.rename("D:\\temp\\pic\\mzitu\\"+title,"D:\\temp\\pic\\mzitu\\"+title+page)
         return
 if __name__ == '__main__':
-    for i in range(3,4):
+    for i in range(1,2):
         print("第"+str(i)+"页")
         allurl = 'http://www.mzitu.com/page/'+str(i)+'/'
         allhtml = urllib.request.urlopen(allurl).read()
