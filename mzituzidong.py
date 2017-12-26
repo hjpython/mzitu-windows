@@ -12,13 +12,13 @@ def xiazai_mzitu(url):
     html = urllib.request.urlopen(url)
     page = BeautifulSoup(html.read(),'lxml').find("div",{"class":"pagenavi"}).findAll("span")[-2].get_text()
     try:
-        os.makedirs(r"/home/hj/python/pic/mzitu/"+str(title))
+        os.makedirs("D:\\temp\\pic\\mzitu\\"+str(title))
     except:
         return 
     after = int(page)+1
     for i in range(1,after):
         try:
-            url1 = url + str(i)
+            url1 = url + '/' + str(i)
             html = urllib.request.urlopen(urllib.request.Request(url1))
             picurl = BeautifulSoup(html.read(),'lxml').find("div",{"class":"main-image"}).find("img")["src"]
             req = urllib.request.Request(picurl)             
@@ -31,13 +31,13 @@ def xiazai_mzitu(url):
             req.add_header("Connection","keep-alive")        
             req.add_header("Host","i.meizitu.net")           
             img = urllib.request.urlopen(req).read()         
-            f = open("/home/hj/python/pic/mzitu/"+title+"/"+str(i)+".jpg","wb")
+            f = open("D:\\temp\\pic\\mzitu\\"+title+"\\"+str(i)+".jpg","wb")
             f.write(img)                 
             f.close()
         except urllib.error.URLError as e:
             if hasattr(e,"code"):
                 print(e.code)
-                conn = pymysql.connect(host='192.168.0.131',user='root',passwd='123456',db='mypydb',charset='utf8')
+                conn = pymysql.connect(host='127.0.0.1',user='root',passwd='123456',db='mypydb',charset='utf8')
                 cur = conn.cursor()                                                                             
                 sql = ("insert into url(url)" "values(%s)")
                 cur.execute(sql,url)
@@ -48,7 +48,7 @@ def xiazai_mzitu(url):
                 continue
             if hasattr(e,"reason"):
                 print(e.reason)
-                conn = pymysql.connect(host='192.168.0.131',user='root',passwd='123456',db='mypydb',charset='utf8')
+                conn = pymysql.connect(host='127.0.0.1',user='root',passwd='123456',db='mypydb',charset='utf8')
                 cur = conn.cursor()                                                                             
                 sql = ("insert into url(url)" "values(%s)")
                 cur.execute(sql,url)
@@ -63,10 +63,10 @@ def xiazai_mzitu_sql(url):
     html = urllib.request.urlopen(url)
     page = BeautifulSoup(html,'lxml').find("div",{"class":"pagenavi"}).findAll("span")[-2].get_text()
     try:
-        os.makedirs(r"/home/hj/python/pic/mzitu/"+str(title))
+        os.makedirs("D:\\temp\\pic\\mzitu\\"+str(title))
     except:         
-        shutil.rmtree(r"/home/hj/python/pic/mzitu/"+str(title))
-        os.makedirs(r"/home/hj/python/pic/mzitu/"+str(title))
+        shutil.rmtree("D:\\temp\\pic\\mzitu\\"+str(title))
+        os.makedirs("D:\\temp\\pic\\mzitu\\"+str(title))
     after = int(page)+1
     for i in range(1,after):
         try:
@@ -83,13 +83,13 @@ def xiazai_mzitu_sql(url):
             req.add_header("Connection","keep-alive")        
             req.add_header("Host","i.meizitu.net")           
             img = urllib.request.urlopen(req).read()         
-            f = open("/home/hj/python/pic/mzitu/"+title+"/"+str(i)+".jpg","wb")
+            f = open("D:\\temp\\pic\\mzitu\\"+title+"\\"+str(i)+".jpg","wb")
             f.write(img)                 
             f.close()
         except urllib.error.URLError as e:
             if hasattr(e,"code"):
                 print(e.code)
-                conn = pymysql.connect(host='192.168.0.131',user='root',passwd='123456',db='mypydb',charset='utf8')
+                conn = pymysql.connect(host='127.0.0.1',user='root',passwd='123456',db='mypydb',charset='utf8')
                 cur = conn.cursor()
                 sql = ("insert into urll(url)" "values(%s)")
                 cur.execute(sql,url)
@@ -100,7 +100,7 @@ def xiazai_mzitu_sql(url):
                 continue
             if hasattr(e,"reason"):
                 print(e.reason)
-                conn = pymysql.connect(host='192.168.0.131',user='root',passwd='123456',db='mypydb',charset='utf8')
+                conn = pymysql.connect(host='127.0.0.1',user='root',passwd='123456',db='mypydb',charset='utf8')
                 cur = conn.cursor()
                 sql = ("insert into urll(url)" "values(%s)")
                 cur.execute(sql,url)
@@ -110,7 +110,7 @@ def xiazai_mzitu_sql(url):
                 print('未下载网址已存入数据库')
                 continue
 if __name__ == '__main__':
-    for i in range(45,46):
+    for i in range(1,162):
         print("第"+str(i)+"页")
         allurl = 'http://www.mzitu.com/page/'+str(i)+'/'
         allhtml = urllib.request.urlopen(allurl).read()
@@ -124,7 +124,7 @@ if __name__ == '__main__':
             print(url)
             xiazai_mzitu(url)
     urls = []
-    conn = pymysql.connect(host='192.168.0.131',user='root',passwd='123456',db='mypydb',charset='utf8')
+    conn = pymysql.connect(host='127.0.0.1',user='root',passwd='123456',db='mypydb',charset='utf8')
     cur = conn.cursor()
     cur.execute("select url from url")
     results = cur.fetchall()
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         print("重新下载:%s"%url)
         xiazai_mzitu_sql(url)
         try:
-            conn = pymysql.connect(host='192.168.0.131',user='root',passwd='123456',db='mypydb',charset='utf8')
+            conn = pymysql.connect(host='127.0.0.1',user='root',passwd='123456',db='mypydb',charset='utf8')
             cur = conn.cursor()
             cur.execute("select url from urll")
             results = cur.fetchall()
