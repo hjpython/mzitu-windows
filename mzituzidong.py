@@ -9,11 +9,13 @@ import pymysql
 def xiazai_mzitu(url):
     html = urllib.request.urlopen(url)
     title = BeautifulSoup(html.read(),'lxml').find("h2",{"class":"main-title"}).get_text()
-    title = title.replace(':','')
+    title = title.replace(':', '')
+    title = title.replace('?', '')
+    title = title.replace('"', '')
     html = urllib.request.urlopen(url)
     page = BeautifulSoup(html.read(),'lxml').find("div",{"class":"pagenavi"}).findAll("span")[-2].get_text()
     try:
-        os.makedirs("D:\\temp\\pic\\mzitu\\"+title)
+        os.makedirs("D:\\temp\\pic\\mzitu\\"+title+page)
     except:
         return 
     after = int(page)+1
@@ -32,7 +34,7 @@ def xiazai_mzitu(url):
             req.add_header("Connection","keep-alive")        
             req.add_header("Host","i.meizitu.net")           
             img = urllib.request.urlopen(req).read()         
-            f = open("D:\\temp\\pic\\mzitu\\"+title+"\\"+str(i)+".jpg","wb")
+            f = open("D:\\temp\\pic\\mzitu\\"+title+page+"\\"+str(i)+".jpg","wb")
             f.write(img)                 
             f.close()
         except urllib.error.URLError as e:
@@ -61,18 +63,20 @@ def xiazai_mzitu(url):
 def xiazai_mzitu_sql(url):
     html = urllib.request.urlopen(url)
     title = BeautifulSoup(html,'lxml').find("h2",{"class":"main-title"}).get_text()
-    title = title.replace(':', '.')
+    title = title.replace(':', '')
+    title = title.replace('?', '')
+    title = title.replace('"', '')
     html = urllib.request.urlopen(url)
     page = BeautifulSoup(html,'lxml').find("div",{"class":"pagenavi"}).findAll("span")[-2].get_text()
     try:
-        os.makedirs("D:\\temp\\pic\\mzitu\\"+title)
+        os.makedirs("D:\\temp\\pic\\mzitu\\"+title+page)
     except:         
-        shutil.rmtree("D:\\temp\\pic\\mzitu\\"+title)
-        os.makedirs("D:\\temp\\pic\\mzitu\\"+title)
+        shutil.rmtree("D:\\temp\\pic\\mzitu\\"+title+page)
+        os.makedirs("D:\\temp\\pic\\mzitu\\"+title+page)
     after = int(page)+1
     for i in range(1,after):
         try:
-            url1 = url + str(i)
+            url1 = url + '/' + str(i)
             html = urllib.request.urlopen(urllib.request.Request(url1))
             picurl = BeautifulSoup(html,'lxml').find("div",{"class":"main-image"}).find("img")["src"]
             req = urllib.request.Request(picurl)             
@@ -85,7 +89,7 @@ def xiazai_mzitu_sql(url):
             req.add_header("Connection","keep-alive")        
             req.add_header("Host","i.meizitu.net")           
             img = urllib.request.urlopen(req).read()         
-            f = open("D:\\temp\\pic\\mzitu\\"+title+"\\"+str(i)+".jpg","wb")
+            f = open("D:\\temp\\pic\\mzitu\\"+title+page+"\\"+str(i)+".jpg","wb")
             f.write(img)                 
             f.close()
         except urllib.error.URLError as e:
