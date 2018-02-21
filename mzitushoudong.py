@@ -6,24 +6,28 @@ import os
 import urllib.error
 import shutil
 def xiazai_mzitu(url):
-    html = urllib.request.urlopen(url)
+    html = urllib.request.urlopen(url).read()
     title = BeautifulSoup(html,'lxml').find("h2",{"class":"main-title"}).get_text()
     title = title.replace(':','')
     title = title.replace('?','')
     title = title.replace('"','')
-    html = urllib.request.urlopen(url)
+    print(title)
+    html = urllib.request.urlopen(url).read()
     page = BeautifulSoup(html,'lxml').find("div",{"class":"pagenavi"}).findAll("span")[-2].get_text()
+    print(page)
     try:
         os.makedirs("D:\\temp\\pic\\mzitu\\"+str(title)+page)
-    except:         
-        shutil.rmtree("D:\\temp\\pic\\mzitu\\"+str(title)+page)
-        os.makedirs("D:\\temp\\pic\\mzitu\\"+str(title)+page)
+    except:
+        return
+        #shutil.rmtree("D:\\temp\\pic\\mzitu\\"+str(title)+page)
+        #os.makedirs("D:\\temp\\pic\\mzitu\\"+str(title)+page)
     after = int(page)+1
     for i in range(1,after):
         try:
             url1 = url + '/' + str(i)
-            html = urllib.request.urlopen(urllib.request.Request(url1))
+            html = urllib.request.urlopen(urllib.request.Request(url1)).read()
             picurl = BeautifulSoup(html,'lxml').find("div",{"class":"main-image"}).find("img")["src"]
+            print(picurl)
             req = urllib.request.Request(picurl)
             req.add_header("Accept","image/webp,image/apng,image/*,*/*;q=0.8")
             req.add_header("Accept-Encoding","gzip,deflate") 
@@ -44,6 +48,8 @@ def xiazai_mzitu(url):
             if hasattr(e,"reason"):
                 print(e.reason)
                 continue
+        finally:
+            pass
 if __name__ == '__main__':
     while True:
         url = input("请输入网址:")
